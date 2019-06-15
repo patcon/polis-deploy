@@ -1,0 +1,31 @@
+- name: Cloning polisServer
+  git:
+    repo: https://github.com/{{ server_repo }}.git
+    force: yes
+    version: "{{ server_branch }}"
+    dest: "{{ server_path }}"
+
+- name: Running SQL
+  shell: psql -d {{ db_name }} -f {{ server_path }}/postgres/db_setup_draft.sql
+  become_user: postgres
+
+- name: Install .env file
+  template:
+    src: dev.env.j2
+    dest: "{{ server_path }}/.env"
+
+- name: Install dotenv for easier envvar management
+  shell: npm install dotenv
+  args:
+    chdir: "{{ server_path }}"
+
+- name: Install npm packages
+  shell: npm install --no-optional
+  ignore_errors: yes
+  args:
+    chdir: "{{ server_path }}"
+
+- name: Rebuild bcrypt for some reason
+  shell: npm rebuild
+  args:
+    chdir: "{{ server_path }}"

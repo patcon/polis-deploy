@@ -1,0 +1,21 @@
+---
+nvm_node_version: 10.9.0
+server_repo: pol-is/polisServer
+server_branch: master
+server_path: /vagrant/polisServer
+db_name: &db polis
+db_pass: &pass testtest123
+postgresql_databases:
+  - name: *db
+postgresql_users:
+  - name: *db
+    db: *db
+    priv: ALL
+    role_attr_flag: SUPERUSER
+    password: *pass
+postgresql_hba_entries:
+  - { type: local, database: polis, user: polis, auth_method: md5 }
+  - { type: local, database: all, user: postgres, auth_method: peer }
+  - { type: local, database: all, user: all, auth_method: peer }
+  - { type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5 }
+  - { type: host, database: all, user: all, address: '::1/128', auth_method: md5 }

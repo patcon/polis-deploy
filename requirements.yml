@@ -1,0 +1,4 @@
+---
+- src: stephdewit.nvm
+- src: geerlingguy.postgresql
+- src: geerlingguy.git
